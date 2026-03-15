@@ -7,6 +7,7 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Desain Dasar */
         body { background: #000; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
         .app-container { max-width: 450px; margin: auto; padding: 20px; text-align: center; min-height: 100vh; display: flex; flex-direction: column; }
         
@@ -14,38 +15,50 @@
         .header-text span { color: #fff; font-weight: normal; font-style: italic; }
         .sub-header { font-size: 1.4rem; font-weight: bold; margin-bottom: 25px; letter-spacing: 1px; }
 
-        /* Scanner Wrapper - FIXED CENTER */
+        /* PERBAIKAN SCANNER FRAME - Menjadi Relatif */
         .scanner-wrapper { 
             position: relative; width: 100%; aspect-ratio: 1/1; 
             background: linear-gradient(180deg, #ff4500 0%, #000 100%); 
             border-radius: 50px; padding: 3px; margin-bottom: 25px;
+            display: flex; align-items: center; justify-content: center; /* Memastikan tombol di tengah */
         }
         .scanner-inner { 
             background: #000; border-radius: 47px; width: 100%; height: 100%; 
             display: flex; align-items: center; justify-content: center;
             overflow: hidden; position: relative; 
         }
-        #reader { width: 100%; height: 100%; border: none !important; }
 
-        /* Overlay Siku Kamera */
+        /* PERBAIKAN VIDEO - Memenuhi Frame */
+        #reader { width: 100% !important; height: 100% !important; border: none !important; margin: 0; padding: 0; position: absolute; top: 0; left: 0; }
+        #reader video { object-fit: cover !important; width: 100% !important; height: 100% !important; }
+
+        /* Siku Kamera */
         .camera-overlay { position: absolute; top: 12%; left: 12%; right: 12%; bottom: 12%; border: 4px solid transparent; pointer-events: none; z-index: 10; display: none; }
         .corner-tl { position: absolute; top: 0; left: 0; width: 35px; height: 35px; border-top: 5px solid #fff; border-left: 5px solid #fff; }
         .corner-tr { position: absolute; top: 0; right: 0; width: 35px; height: 35px; border-top: 5px solid #fff; border-right: 5px solid #fff; }
         .corner-bl { position: absolute; bottom: 0; left: 0; width: 35px; height: 35px; border-bottom: 5px solid #fff; border-left: 5px solid #fff; }
         .corner-br { position: absolute; bottom: 0; right: 0; width: 35px; height: 35px; border-bottom: 5px solid #fff; border-right: 5px solid #fff; }
 
-        /* FIX WARNA SESUAI GAMBAR */
-        .notif-box { margin-top: 15px; border-radius: 40px; padding: 25px; display: none; font-weight: bold; font-size: 1.1rem; text-transform: uppercase; }
-        .notif-sukses { background: #b7ff00; color: #000; } /* Hijau Lime Terang sesuai SCAN-TICKET-SUKSES.png */
-        .notif-gagal { background: #ff0000; color: #fff; } /* Merah Solid sesuai SCAN-TICKET-GAGAL.png */
+        /* PERBAIKAN TOMBOL & NOTIFIKASI */
+        .btn-orange-main { 
+            background: #ff4500; color: #fff; border: none; padding: 12px 30px; 
+            border-radius: 20px; font-weight: bold; text-transform: uppercase; 
+            cursor: pointer; z-index: 20; /* Berada di atas video */
+        }
         
-        .btn-orange-main { background: #ff4500; color: #fff; border: none; padding: 12px 30px; border-radius: 20px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+        .notif-box { margin-top: 15px; border-radius: 40px; padding: 25px; display: none; font-weight: bold; font-size: 1rem; text-transform: uppercase; }
+        
+        /* PERBAIKAN WARNA GAGAL */
+        .notif-sukses { background: #6fff3f; color: #000; } 
+        .notif-gagal { background: #f24444 !important; color: #fff !important; } /* Paksa jadi Merah */
+        
         .btn-scan-lagi { background: #ff9900; color: #000; border: none; width: 85%; padding: 15px; border-radius: 35px; font-weight: bold; margin-top: 25px; text-transform: uppercase; }
 
+        /* Input Code */
         .input-label { text-align: left; font-weight: bold; font-size: 0.9rem; margin-top: 35px; margin-bottom: 8px; color: #fff; width: 100%; }
         .input-group-custom { display: flex; background: #333; border-radius: 45px; padding: 5px; border: 2px solid #ff4500; margin-bottom: 30px; width: 100%; }
         .input-group-custom input { background: transparent; border: none; color: #fff; padding: 10px 20px; flex-grow: 1; outline: none; font-size: 1rem; }
-        .btn-cek { background: #ff4500; border-radius: 35px; border: none; color: #fff; padding: 8px 30px; font-weight: bold; }
+        .btn-cek { background: #ff4500; border-radius: 35px; border: none; color: #fff; padding: 8px 30px; font-weight: bold; cursor: pointer; }
 
         .footer-logo { background: #ff4500; height: 100px; border-radius: 45px 45px 0 0; margin-top: auto; width: 110%; margin-left: -5%; }
     </style>
@@ -82,7 +95,9 @@
 </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2WsfBJDRTsfYktOkccbSG9SG7HZ-_U03Vq4t1oiGwbbiZnWJwKxC0F8GAcI4I8rNe/exec";
+    // Gunakan SCRIPT_URL Anda yang sudah ada
+    const SCRIPT_URL = "MASUKKAN_URL_APPS_SCRIPT_ANDA_DI_SINI"; 
+    
     const html5QrCode = new Html5Qrcode("reader");
     const notifBox = document.getElementById('notif');
     const startBtn = document.getElementById('start-btn');
@@ -114,13 +129,11 @@
         })
         .then(res => res.json())
         .then(data => {
-            // Ubah pesan menjadi huruf besar sesuai desain gambar
-            const pesan = data.message.toUpperCase();
-            notifBox.innerHTML = pesan.replace(/\n/g, "<br>");
-            
-            if (pesan.includes("BERHASIL") || pesan.includes("SUCCESS")) {
+            notifBox.innerHTML = data.message.replace(/\n/g, "<br>");
+            if (data.message.includes("BERHASIL") || data.message.includes("SUCCESS")) {
                 notifBox.classList.add("notif-sukses");
             } else {
+                // Terapkan class gagal (Merah)
                 notifBox.classList.add("notif-gagal");
             }
             resetBtn.style.display = "block";
