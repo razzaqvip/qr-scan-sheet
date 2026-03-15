@@ -7,7 +7,6 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Desain Dasar */
         body { background: #000; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
         .app-container { max-width: 450px; margin: auto; padding: 20px; text-align: center; min-height: 100vh; display: flex; flex-direction: column; }
         
@@ -15,12 +14,12 @@
         .header-text span { color: #fff; font-weight: normal; font-style: italic; }
         .sub-header { font-size: 1.4rem; font-weight: bold; margin-bottom: 25px; letter-spacing: 1px; }
 
-        /* PERBAIKAN SCANNER FRAME - Menjadi Relatif */
+        /* Scanner Frame - FIXED CENTER & RESPONSIVE */
         .scanner-wrapper { 
             position: relative; width: 100%; aspect-ratio: 1/1; 
             background: linear-gradient(180deg, #ff4500 0%, #000 100%); 
             border-radius: 50px; padding: 3px; margin-bottom: 25px;
-            display: flex; align-items: center; justify-content: center; /* Memastikan tombol di tengah */
+            display: flex; align-items: center; justify-content: center;
         }
         .scanner-inner { 
             background: #000; border-radius: 47px; width: 100%; height: 100%; 
@@ -28,37 +27,29 @@
             overflow: hidden; position: relative; 
         }
 
-        /* PERBAIKAN VIDEO - Memenuhi Frame */
-        #reader { width: 100% !important; height: 100% !important; border: none !important; margin: 0; padding: 0; position: absolute; top: 0; left: 0; }
+        /* PERBAIKAN: Memaksa Video Center dan Full */
+        #reader { width: 100% !important; height: 100% !important; border: none !important; position: absolute; }
         #reader video { object-fit: cover !important; width: 100% !important; height: 100% !important; }
 
-        /* Siku Kamera */
         .camera-overlay { position: absolute; top: 12%; left: 12%; right: 12%; bottom: 12%; border: 4px solid transparent; pointer-events: none; z-index: 10; display: none; }
         .corner-tl { position: absolute; top: 0; left: 0; width: 35px; height: 35px; border-top: 5px solid #fff; border-left: 5px solid #fff; }
         .corner-tr { position: absolute; top: 0; right: 0; width: 35px; height: 35px; border-top: 5px solid #fff; border-right: 5px solid #fff; }
         .corner-bl { position: absolute; bottom: 0; left: 0; width: 35px; height: 35px; border-bottom: 5px solid #fff; border-left: 5px solid #fff; }
         .corner-br { position: absolute; bottom: 0; right: 0; width: 35px; height: 35px; border-bottom: 5px solid #fff; border-right: 5px solid #fff; }
 
-        /* PERBAIKAN TOMBOL & NOTIFIKASI */
-        .btn-orange-main { 
-            background: #ff4500; color: #fff; border: none; padding: 12px 30px; 
-            border-radius: 20px; font-weight: bold; text-transform: uppercase; 
-            cursor: pointer; z-index: 20; /* Berada di atas video */
-        }
+        .btn-orange-main { background: #ff4500; color: #fff; border: none; padding: 12px 30px; border-radius: 20px; font-weight: bold; text-transform: uppercase; cursor: pointer; z-index: 20; position: relative; }
         
+        /* Notifikasi - FIXED WARNA MERAH & HIJAU */
         .notif-box { margin-top: 15px; border-radius: 40px; padding: 25px; display: none; font-weight: bold; font-size: 1rem; text-transform: uppercase; }
-        
-        /* PERBAIKAN WARNA GAGAL */
-        .notif-sukses { background: #6fff3f; color: #000; } 
-        .notif-gagal { background: #f24444 !important; color: #fff !important; } /* Paksa jadi Merah */
+        .notif-sukses { background: #6fff3f !important; color: #000 !important; } 
+        .notif-gagal { background: #f24444 !important; color: #fff !important; } 
         
         .btn-scan-lagi { background: #ff9900; color: #000; border: none; width: 85%; padding: 15px; border-radius: 35px; font-weight: bold; margin-top: 25px; text-transform: uppercase; }
 
-        /* Input Code */
         .input-label { text-align: left; font-weight: bold; font-size: 0.9rem; margin-top: 35px; margin-bottom: 8px; color: #fff; width: 100%; }
         .input-group-custom { display: flex; background: #333; border-radius: 45px; padding: 5px; border: 2px solid #ff4500; margin-bottom: 30px; width: 100%; }
         .input-group-custom input { background: transparent; border: none; color: #fff; padding: 10px 20px; flex-grow: 1; outline: none; font-size: 1rem; }
-        .btn-cek { background: #ff4500; border-radius: 35px; border: none; color: #fff; padding: 8px 30px; font-weight: bold; cursor: pointer; }
+        .btn-cek { background: #ff4500; border-radius: 35px; border: none; color: #fff; padding: 8px 30px; font-weight: bold; }
 
         .footer-logo { background: #ff4500; height: 100px; border-radius: 45px 45px 0 0; margin-top: auto; width: 110%; margin-left: -5%; }
     </style>
@@ -81,7 +72,7 @@
     </div>
 
     <div id="notif" class="notif-box"></div>
-    <div style="display: flex; justify-content: center;">
+    <div style="display: flex; justify-content: center; width: 100%;">
         <button id="reset-btn" class="btn-scan-lagi" style="display:none;">SCAN LAGI</button>
     </div>
 
@@ -95,7 +86,7 @@
 </div>
 
 <script>
-    // Gunakan SCRIPT_URL Anda yang sudah ada
+    // GANTI URL DI BAWAH INI DENGAN URL EXEC ANDA
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx6rr8cqYT1Ly6Pgt-aLXJKLD7OOgXao0ODSlOo9t1j_bq2Enpx10LJj-hK6U2NE1JI/exec"; 
     
     const html5QrCode = new Html5Qrcode("reader");
@@ -123,24 +114,38 @@
         notifBox.style.color = "#fff";
         notifBox.innerHTML = "MENGECEK TIKET...";
 
+        // PERBAIKAN: Gunakan format FormData agar tidak kena blokir CORS
+        const formData = new FormData();
+        formData.append("kode", kode);
+
         fetch(SCRIPT_URL, {
             method: "POST",
-            body: JSON.stringify({ kode: kode })
+            mode: "no-cors", // Mode untuk menembus proteksi browser
+            body: formData
         })
+        .then(() => {
+            // Karena "no-cors", kita tidak bisa baca respon JSON langsung.
+            // Kita harus nembak lagi lewat fungsi GET untuk ambil status validasinya.
+            ambilResponData(kode);
+        })
+        .catch(err => {
+            notifBox.innerHTML = "KESALAHAN JARINGAN";
+            notifBox.classList.add("notif-gagal");
+            resetBtn.style.display = "block";
+        });
+    }
+
+    // Fungsi tambahan untuk membaca hasil dari Google Sheet
+    function ambilResponData(kode) {
+        fetch(`${SCRIPT_URL}?kode=${kode}`)
         .then(res => res.json())
         .then(data => {
-            notifBox.innerHTML = data.message.replace(/\n/g, "<br>");
+            notifBox.innerHTML = data.message.toUpperCase().replace(/\n/g, "<br>");
             if (data.message.includes("BERHASIL") || data.message.includes("SUCCESS")) {
                 notifBox.classList.add("notif-sukses");
             } else {
-                // Terapkan class gagal (Merah)
                 notifBox.classList.add("notif-gagal");
             }
-            resetBtn.style.display = "block";
-        })
-        .catch(err => {
-            notifBox.innerHTML = "GAGAL TERHUBUNG KE SERVER";
-            notifBox.classList.add("notif-gagal");
             resetBtn.style.display = "block";
         });
     }
