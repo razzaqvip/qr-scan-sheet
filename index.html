@@ -7,10 +7,10 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* Desain Dasar sesuai KAMERA-OFF.png */
         body { background: #000; color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
         .app-container { max-width: 450px; margin: auto; padding: 20px; text-align: center; min-height: 100vh; display: flex; flex-direction: column; }
         
-        /* Header sesuai gambar KAMERA-OFF.png */
         .header-text { font-weight: bold; font-size: 1.4rem; color: #ff4500; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 1px; border-bottom: 2px solid #ff4500; padding-bottom: 10px; }
         .header-text span { color: #fff; font-weight: normal; font-style: italic; }
         .sub-header { font-size: 1.4rem; font-weight: bold; margin-bottom: 25px; letter-spacing: 1px; }
@@ -19,7 +19,7 @@
         .scanner-wrapper { 
             position: relative; width: 100%; aspect-ratio: 1/1; 
             background: linear-gradient(180deg, #ff4500 0%, #000 100%); 
-            border-radius: 50px; padding: 3px; margin-bottom: 20px;
+            border-radius: 50px; padding: 3px; margin-bottom: 25px;
         }
         .scanner-inner { background: #000; border-radius: 47px; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         #reader { width: 105%; height: 105%; border: none !important; }
@@ -31,21 +31,21 @@
         .corner-bl { position: absolute; bottom: 0; left: 0; width: 35px; height: 35px; border-bottom: 5px solid #fff; border-left: 5px solid #fff; }
         .corner-br { position: absolute; bottom: 0; right: 0; width: 35px; height: 35px; border-bottom: 5px solid #fff; border-right: 5px solid #fff; }
 
-        /* Tombol & Notifikasi sesuai image_973062.png & SCAN-TICKET-SUKSES.png */
-        .btn-orange { background: #ff4500; color: #fff; border: none; padding: 12px 25px; border-radius: 20px; font-weight: bold; text-transform: uppercase; }
+        /* Tombol & Notifikasi sesuai SCAN-TICKET-SUKSES.png & image_973062.png */
+        .btn-orange-main { background: #ff4500; color: #fff; border: none; padding: 12px 30px; border-radius: 20px; font-weight: bold; text-transform: uppercase; }
         .notif-box { margin-top: 15px; border-radius: 40px; padding: 25px; display: none; font-weight: bold; font-size: 1rem; }
-        .notif-sukses { background: #6fff3f; color: #000; } /* Hijau terang sesuai gambar */
-        .notif-gagal { background: #f24444; color: #fff; } /* Merah terang sesuai gambar */
+        .notif-sukses { background: #6fff3f; color: #000; } 
+        .notif-gagal { background: #f24444; color: #fff; } 
         
-        .btn-scan-lagi { background: #ff9900; color: #000; border: none; width: 80%; padding: 15px; border-radius: 30px; font-weight: bold; margin-top: 15px; text-transform: uppercase; }
+        .btn-scan-lagi { background: #ff9900; color: #000; border: none; width: 85%; padding: 15px; border-radius: 35px; font-weight: bold; margin-top: 25px; text-transform: uppercase; }
 
         /* Input Code sesuai image_972d1a.png */
-        .input-label { text-align: left; font-weight: bold; font-size: 0.85rem; margin-top: 25px; margin-bottom: 5px; color: #fff; }
-        .input-group-custom { display: flex; background: #333; border-radius: 40px; padding: 5px; border: 2px solid #ff4500; margin-bottom: 20px; }
-        .input-group-custom input { background: transparent; border: none; color: #fff; padding: 8px 15px; flex-grow: 1; outline: none; font-size: 0.9rem; }
-        .btn-cek { background: #ff4500; border-radius: 30px; border: none; color: #fff; padding: 5px 20px; font-weight: bold; }
+        .input-label { text-align: left; font-weight: bold; font-size: 0.9rem; margin-top: 35px; margin-bottom: 8px; color: #fff; }
+        .input-group-custom { display: flex; background: #333; border-radius: 45px; padding: 5px; border: 2px solid #ff4500; margin-bottom: 30px; }
+        .input-group-custom input { background: transparent; border: none; color: #fff; padding: 10px 20px; flex-grow: 1; outline: none; font-size: 1rem; }
+        .btn-cek { background: #ff4500; border-radius: 35px; border: none; color: #fff; padding: 8px 30px; font-weight: bold; }
 
-        .footer-logo { background: #ff4500; height: 80px; border-radius: 40px 40px 0 0; margin-top: auto; width: 100%; }
+        .footer-logo { background: #ff4500; height: 100px; border-radius: 45px 45px 0 0; margin-top: auto; width: 110%; margin-left: -5%; }
     </style>
 </head>
 <body>
@@ -61,7 +61,7 @@
                 <div class="corner-tl"></div><div class="corner-tr"></div>
                 <div class="corner-bl"></div><div class="corner-br"></div>
             </div>
-            <button id="start-btn" class="btn-orange">AKTIFKAN KAMERA</button>
+            <button id="start-btn" class="btn-orange-main">AKTIFKAN KAMERA</button>
         </div>
     </div>
 
@@ -80,7 +80,6 @@
 </div>
 
 <script>
-    // Tetap menggunakan SCRIPT_URL yang kamu miliki
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2WsfBJDRTsfYktOkccbSG9SG7HZ-_U03Vq4t1oiGwbbiZnWJwKxC0F8GAcI4I8rNe/exec";
     const html5QrCode = new Html5Qrcode("reader");
     const notifBox = document.getElementById('notif');
@@ -114,7 +113,7 @@
         .then(res => res.json())
         .then(data => {
             notifBox.innerHTML = data.message.replace(/\n/g, "<br>");
-            // Penyesuaian class warna berdasarkan pesan dari Code.gs kamu
+            // Menyesuaikan warna berdasarkan respon teks dari GAS James
             if (data.message.includes("BERHASIL") || data.message.includes("SUCCESS")) {
                 notifBox.classList.add("notif-sukses");
             } else {
